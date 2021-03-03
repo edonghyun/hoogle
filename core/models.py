@@ -42,3 +42,13 @@ class Article(models.Model):
     class Meta:
         db_table = 'articles'
         unique_together = ('title', 'date', )
+
+
+class Doc2VecModel(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    epochs = models.IntegerField(default=0)
+    instance = models.BinaryField()
+
+    class Meta:
+        db_table = 'doc2vec_models'
