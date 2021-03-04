@@ -1,6 +1,19 @@
 {% load static %}
 
-<div style="text-align:right; margin:30px 70px 0px 0px;"></div>
+
+<div style="text-align:right; margin:30px 70px 0px 0px;">
+    {% if view.user.is_authenticated %}
+    <div class="top-bar">
+        <span class="" style="margin-right:30px"><a href="">검색히스토리</a></span>
+        <span class="" style="margin-right:30px"><a href="{% url 'user:auth.logout' %}">로그아웃</a></span>
+    </div>
+    {% else %}
+    <div class="top-bar">
+        <span class="" style="margin-right:30px"><a href="{% url 'user:auth.login' %}">로그인</a></span>
+        <span class="" style="margin-right:30px"><a href="{% url 'user:auth.register' %}">회원가입</a></span>
+    </div>
+    {% endif %}
+</div>
 <div id="logo">
     <a href="/"><img src="{% static 'image/logo.png' %}"></a>
 </div>

@@ -1,5 +1,5 @@
 from django.contrib.auth import models as auth
-
+from django.db.models.query import QuerySet
 from django.db import models
 
 # Create your models here.
@@ -12,7 +12,7 @@ class User(auth.AbstractBaseUser):
         max_length=20,
         unique=True,
     )
-
+    objects = auth.BaseUserManager()
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -27,6 +27,15 @@ class Category(models.Model):
         db_table = 'categories'
 
 
+class WeightBasedQuerySet(QuerySet):
+    def test(self, query):
+        return self
+
+
+class ArticleManager(models.Manager):
+    _queryset_class = WeightBasedQuerySet
+
+
 class Article(models.Model):
     category = models.ForeignKey(
         'core.Category',
@@ -38,6 +47,8 @@ class Article(models.Model):
     body = models.TextField()
     date = models.DateTimeField()
     url = models.URLField()
+
+    objects = ArticleManager()
 
     class Meta:
         db_table = 'articles'

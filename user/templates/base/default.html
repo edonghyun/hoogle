@@ -3,16 +3,9 @@
 <body>
     {% include '../includes/head.html' %}
     {% include '../includes/header.html' %}
-    <form action="search" method="GET">
-        <div id="queryBar" style="margin-top:20px;">
-            {% if error %}
-                <p class=error><strong>Error:</strong> {{ error }}
-            {% endif %}
-            {% block content %}
-                <p>Page content goes here...</p>
-            {% endblock %}
-        </div>
-    </form>
+    {% block content %}
+        <p>Page content goes here...</p>
+    {% endblock %}
     {% include '../includes/scripts.html' %}
 </body>
 </html>

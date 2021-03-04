@@ -20,7 +20,7 @@ from core.models import (
 
 logger = logging.getLogger(__name__)
 
-MAX_PAGE = 100
+MAX_PAGE = 10000
 
 
 class Command(BaseCommand):
@@ -102,7 +102,14 @@ class Command(BaseCommand):
         logger.info(f'article parsing ended')
 
     def get_beautifulsoup(self, url):
-        response = requests.get(url)
+        headers = {
+            'user-agent': (
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                'AppleWebKit/537.36 (KHTML, like Gecko)'
+                'Chrome/75.0.3770.142 Safari/537.36'
+            )
+        }
+        response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')
         return soup
 

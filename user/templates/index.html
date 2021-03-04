@@ -1,9 +1,29 @@
 {% extends 'base/default.html' %}
 {% block content %}
-<div class="wrapper">
-    <!--<span class="">검색어</span>-->
-    <!-- <input type="text" class="inputQuery" name="query" id="query" aria-describedby="basic-addon3" value=""> -->
-    <input type="text" class="inputQuery" name="query" id="query" aria-describedby="basic-addon3" value="">
-    <input type="submit" value="검색" class="btn btn-default submitBtn">
-</div>
+<form method="get">
+    <div id="queryBar" style="margin-top:20px;">
+        <div class="wrapper">
+            <!--<span class="">검색어</span>-->
+            <!-- <input type="text" class="inputQuery" name="query" id="query" aria-describedby="basic-addon3" value=""> -->
+            <input type="text" class="inputQuery" name="query" id="query" aria-describedby="basic-addon3" value="">
+            <input type="submit" value="검색" class="btn btn-default submitBtn">
+        </div>
+        {% if error %}
+            <p class=error><strong>Error:</strong> {{ error }}
+        {% endif %}
+    </div>
+</form>
+
+{% if object_list %}
+    <div class="searchResult" id="searchResult">
+    {% for object in object_list %}
+        <div class="resultRow" >
+            <div class="title"><a href="" target="_blank">{{ object.title }}</a></div>
+            <div class="publishingDate"><span>Published : </span>{{ object.date }}</div>
+            <div class="article">{{ object.body }}</div>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+
 {% endblock %}
