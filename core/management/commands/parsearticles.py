@@ -20,7 +20,7 @@ from core.models import (
 
 logger = logging.getLogger(__name__)
 
-MAX_PAGE = 10000
+MAX_PAGE = 100000
 
 
 class Command(BaseCommand):
@@ -70,8 +70,10 @@ class Command(BaseCommand):
                 urls = self.parse_list(list_url)
                 detail_urls[category.name] += urls
                 added_url_number += len(urls)
+
                 if added_url_number >= MAX_PAGE:
                     break
+
             logger.info(f'{category.name} {added_url_number} added ...')
         logger.info(f'{len(detail_urls)} articles parsing started')
 
@@ -81,11 +83,14 @@ class Command(BaseCommand):
                 category = Category.objects.get(
                     name=category_name,
                 )
-                article = Article.objects.create(
+                Article.objects.create(
                     category=category,
                     title=title,
                     body=body,
-                    date=parse_date(date),
+                    url=url,
+                    date=parse_date(
+                        date
+                    ),
                 )
             except django.db.utils.IntegrityError:
                 pass

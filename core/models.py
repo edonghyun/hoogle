@@ -1,8 +1,8 @@
+import pickle
+
 from django.contrib.auth import models as auth
 from django.db.models.query import QuerySet
 from django.db import models
-
-# Create your models here.
 
 
 class User(auth.AbstractBaseUser):
@@ -27,16 +27,9 @@ class Category(models.Model):
         db_table = 'categories'
 
 
-class WeightBasedQuerySet(QuerySet):
-    def test(self, query):
-        return self
-
-
-class ArticleManager(models.Manager):
-    _queryset_class = WeightBasedQuerySet
-
-
 class Article(models.Model):
+    weight = 0
+
     category = models.ForeignKey(
         'core.Category',
         on_delete=models.CASCADE,
@@ -48,8 +41,6 @@ class Article(models.Model):
     date = models.DateTimeField()
     url = models.URLField()
 
-    objects = ArticleManager()
-
     class Meta:
         db_table = 'articles'
         unique_together = ('title', 'date', )
@@ -59,7 +50,25 @@ class Doc2VecModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     epochs = models.IntegerField(default=0)
-    instance = models.BinaryField()
+    _instance = models.FileField()
+
+    @property
+    def instance(self):
+        instance = self._instance
+        if not instance:
+            return None
+        return pickle.load(
+            instance
+        )
+
+    def get_most_similar(self, tokenized_query=None, topn=None):
+        model = self.instance
+        model.random.seed(0)
+        infer_vector = model.infer_vector(tokenized_query)
+        return model.docvecs.most_similar(
+            positive=[infer_vector],
+            topn=topn
+        )
 
     class Meta:
         db_table = 'doc2vec_models'
