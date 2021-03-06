@@ -2,6 +2,7 @@ import logging
 import requests
 import collections
 
+from time import sleep
 from datetime import datetime
 from urllib.parse import parse_qs, urljoin
 from bs4 import BeautifulSoup
@@ -20,7 +21,8 @@ from core.models import (
 
 logger = logging.getLogger(__name__)
 
-MAX_PAGE = 100000
+MAX_PAGE = 3000
+MAX_RETRY = 10
 
 
 class Command(BaseCommand):
@@ -71,10 +73,9 @@ class Command(BaseCommand):
                 detail_urls[category.name] += urls
                 added_url_number += len(urls)
 
+                logger.info(f'{category.name} total {added_url_number}')
                 if added_url_number >= MAX_PAGE:
                     break
-
-            logger.info(f'{category.name} {added_url_number} added ...')
         logger.info(f'{len(detail_urls)} articles parsing started')
 
         def parse(category_name, url):
@@ -114,7 +115,20 @@ class Command(BaseCommand):
                 'Chrome/75.0.3770.142 Safari/537.36'
             )
         }
-        response = requests.get(url, headers=headers)
+
+        retried = 0
+        while retried < MAX_RETRY:
+            try:
+                response = requests.get(url, headers=headers)
+                break
+            except requests.exceptions.ChunkedEncodingError:
+                retried += 1
+                logger.info('request failed ... retry in 5 seconds')
+                sleep(10)
+
+        if retried == MAX_RETRY:
+            exit()
+
         soup = BeautifulSoup(response.content, 'html.parser')
         return soup
 
