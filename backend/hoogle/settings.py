@@ -158,3 +158,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # User model
 
 AUTH_USER_MODEL = 'core.User'
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
