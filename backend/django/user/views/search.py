@@ -18,24 +18,16 @@ def get_weighted_queryset(queryset=[], query='', doc2vec_model=None):
         if token not in stopwords.words('english')
     ]
 
-    # Idf = db.select_idf_values(removed_stopwords_query)
-
     # 토큰 수 두 개 이하의 쿼리는 유저 관심도 및 텀프리퀀시 중심으로 가중치 반영
     if len(query) > 2:
         WEIGHT_SIMILARITY = 4.0
         WEIGHT_LATEST = 1.0
-        WEIGHT_CATEGORY = 0.3
-        WEIGHT_USER_INTEREST = 0.4
         WEIGHT_TERM_FREQUENCY = 0.3
-        WEIGHT_ADDNEWEST = 1.0
         WEIGHT_IDF = 1.0
     else:
         WEIGHT_SIMILARITY = 2.4
         WEIGHT_LATEST = 1.0
-        WEIGHT_CATEGORY = 0.1
-        WEIGHT_USER_INTEREST = 2.0
         WEIGHT_TERM_FREQUENCY = 1.6
-        WEIGHT_ADDNEWEST = 1.0
         WEIGHT_IDF = 1.0
 
     weighted_articles = list()
@@ -52,7 +44,6 @@ def get_weighted_queryset(queryset=[], query='', doc2vec_model=None):
         except:
             continue
 
-    # Engine.addWeightCategory(news_and_weight, str_query, WEIGHT_CATEGORY)
     for article in weighted_articles:
         time_delta = (article.date - now()).days * WEIGHT_LATEST * 0.0005
         article.weight -= time_delta
@@ -64,6 +55,7 @@ def get_weighted_queryset(queryset=[], query='', doc2vec_model=None):
                 + article.body.count(terms)
             article.weight += count * WEIGHT_TERM_FREQUENCY
 
+    # Idf = db.select_idf_values(removed_stopwords_query)
     # Engine.addWeightIDF(
     #     news_and_weight, removed_stopwords_query, WEIGHT_IDF, Idf
     # )
