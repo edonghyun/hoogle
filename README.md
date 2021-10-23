@@ -5,6 +5,8 @@ especially for multi-words-query such as "death penalty", "Effective ways to edu
 Hoogle adopted doc2vec based similarity inferrence search engine model, not searching just by query matching. 
 Through below several steps, it catches the meaning of given several words, counts on the user search history and matches information needs of user and qeury results.
 
+![introduction](./docs/images/introduction.png)
+
 ## Getting started
     1. clone the repository
     
@@ -21,7 +23,7 @@ You can find a running system to test at test.test.test.
 
 2. nginx route the http request to django web application.
 
-3. django parse the user inpu query, tokenize through nlp core engine.
+3. django parse the user input query, tokenize through nlp core engine.
 
 4. nlp engine calculate similarity between pre-parsed articles and user input query.
 
@@ -30,6 +32,8 @@ You can find a running system to test at test.test.test.
 5. weight scores are added to each ranked articles.
 
 6. finally return articles relevant to user input query.
+
+![structure_summary](./docs/images/structure_summary.png)
 
 ## Core Search Engine
 #### Structure
