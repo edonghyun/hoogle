@@ -1,15 +1,13 @@
 import React from 'react';
 
-import { Header } from './Header';
-import { LogoBody } from './LogoBody';
+import { MainView } from './views';
 
-function App() {
+const App = () => {
     return (
-        <div id="main-body">
-            <Header />
-            <LogoBody />
+        <div className="container">
+            <MainView />
         </div>
     );
-}
+};
 
 export default App;
