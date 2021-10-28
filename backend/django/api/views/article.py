@@ -1,10 +1,13 @@
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-
 from django.utils.timezone import now
 from django.shortcuts import render
+from rest_framework.generics import ListAPIView
+
 from core.models import Article, Doc2VecModel
-from .base import BaseListView
+
+from ..serializers import ArticleSerializer
+from .mixins import BasePublicAPIMixin
 
 
 def get_weighted_queryset(queryset=[], query='', doc2vec_model=None):
@@ -63,9 +66,9 @@ def get_weighted_queryset(queryset=[], query='', doc2vec_model=None):
     return weighted_articles
 
 
-class SearchListView(BaseListView):
-    model = Article
-    template_name = 'index.html'
+class ArticleListView(BasePublicAPIMixin, ListAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
 
     @property
     def doc2vec_model(self):
@@ -73,12 +76,13 @@ class SearchListView(BaseListView):
 
     def get_queryset(self):
         query = self.request.GET.get('query')
-        if not query:
+        model = self.doc2vec_model
+        if not query or not model:
             return []
 
         queryset = super().get_queryset()
         return get_weighted_queryset(
             queryset=queryset,
             query=query,
-            doc2vec_model=self.doc2vec_model,
+            doc2vec_model=model,
         )
