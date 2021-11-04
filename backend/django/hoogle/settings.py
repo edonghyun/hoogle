@@ -161,6 +161,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'core.User'
 
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'hoogle',
+        'USER': os.environ.get('postgres', 'postgres'),
+        'PASSWORD': os.environ.get('postgres', 'postgres'),
+        'HOST': 'localhost',
+        'HOST': 'postgres',
+        'PORT': 5432,
+    }
+}
+
+
 try:
     from .local_settings import *
 except ImportError:
