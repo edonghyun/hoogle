@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
 const BACKEND_SERVER_URL = 'http://localhost:8000/api/articles/';
+const get_url = (query) => {
+    return `${BACKEND_SERVER_URL}?q=${query}`;
+};
 
 export const SearchBar = ({ setArticles }) => {
     const [query, setQuery] = useState('');
@@ -8,7 +11,7 @@ export const SearchBar = ({ setArticles }) => {
 
     const search = () => {
         setIsLoading(true);
-        fetch(BACKEND_SERVER_URL)
+        fetch(get_url(query))
             .then(setArticles)
             .catch((error) => {
                 console.error(error);
