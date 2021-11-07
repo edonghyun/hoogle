@@ -1,41 +1,23 @@
 import React, { useState } from 'react';
 
+const BACKEND_SERVER_URL = 'http://localhost:8000/api/articles/';
+const get_url = (query) => {
+    return `${BACKEND_SERVER_URL}?q=${query}`;
+};
+
 export const SearchBar = ({ setArticles }) => {
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const search = () => {
         setIsLoading(true);
-        try {
-            console.log(query, 'fetched');
-            setArticles([
-                {
-                    title: 'test',
-                    body: 'test',
-                    date: 'test',
-                },
-                {
-                    title: 'test',
-                    body: 'test',
-                    date: 'test',
-                },
-                {
-                    title: 'test',
-                    body: 'test',
-                    date: 'test',
-                },
-                {
-                    title: 'test',
-                    body: 'test',
-                    date: 'test',
-                },
-            ]);
-        } catch (e) {
-            console.error(e);
-            setArticles([]);
-        } finally {
-            setIsLoading(false);
-        }
+        fetch(get_url(query))
+            .then(setArticles)
+            .catch((error) => {
+                console.error(error);
+                setArticles([]);
+            })
+            .finally(() => setIsLoading(false));
     };
 
     return (
