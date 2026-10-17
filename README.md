@@ -10,6 +10,7 @@ Django API, React 화면, Nginx·PostgreSQL을 포함한 Docker 구성이 들어
 
 - 기존 [소개 화면](docs/images/introduction.png)과 [구조도](docs/images/structure_summary.png)를 보관합니다.
 - 공개 라이브 데모 주소와 현재 환경에서의 전체 실행은 확인하지 않았습니다. 아래 실행 안내는 당시 기록입니다.
+- 기존 Django CI도 환경 복원 대상입니다. [2026-10-17 실행](https://github.com/edonghyun/hoogle/actions/runs/39017524245)은 Python 3.7 런타임 준비 단계에서 실패했으며 해당 job의 애플리케이션 테스트까지 도달하지 못했습니다.
 - 검색 재현에는 기사 데이터와 Doc2Vec 모델 준비가 필요합니다. 기존 의존성은 [requirements.txt](backend/django/requirements.txt)에 고정되어 있으며 이번 정비에서 일괄 업그레이드하지 않았습니다.
 
 ## 코드를 읽는 순서
